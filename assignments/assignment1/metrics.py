@@ -19,10 +19,10 @@ def binary_classification_metrics(prediction, ground_truth):
     all_positive = ground_truth[prediction == True].shape[0]
     false_negative = (ground_truth[prediction == False]).nonzero()[0].shape[0]
 
-    precision = true_positive / all_positive
+    precision = true_positive / all_positive if all_positive else 0.0
     recall = true_positive / (true_positive + false_negative)
 
-    f1 = (2 * precision * recall) / (precision + recall)
+    f1 = (2 * precision * recall) / (precision + recall) if (precision + recall) else 0.0
 
     # TODO: implement metrics!
     # Some helpful links:
@@ -44,4 +44,4 @@ def multiclass_accuracy(prediction, ground_truth):
     accuracy - ratio of accurate predictions to total samples
     '''
     # TODO: Implement computing accuracy
-    return 0
+    return (prediction == ground_truth).nonzero()[0].shape[0] / prediction.shape[0]

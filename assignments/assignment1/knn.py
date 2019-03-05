@@ -130,10 +130,11 @@ class KNN:
            for every test sample
         '''
         num_test = dists.shape[0]
-        num_test = dists.shape[0]
         pred = np.zeros(num_test, np.int)
         for i in range(num_test):
+            p = self.train_y[self.train_y[np.argsort(dists[i])[:self.k]]]
+            # int_negative_count = self.k - int_positive_count
+            pred[i] = np.argmax(np.bincount(np.array(p)))
             # TODO: Implement choosing best class based on k
             # nearest training samples
-            pass
         return pred
