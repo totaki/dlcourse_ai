@@ -39,7 +39,7 @@ class KNN:
 
     def compute_distances_two_loops(self, X):
         '''
-        Computes distance from every sample of X to every training sample
+        Computes L1 distance from every sample of X to every training sample
         Uses simplest implementation with 2 Python loops
 
         Arguments:
@@ -59,7 +59,7 @@ class KNN:
 
     def compute_distances_one_loop(self, X):
         '''
-        Computes distance from every sample of X to every training sample
+        Computes L1 distance from every sample of X to every training sample
         Vectorizes some of the calculations, so only 1 loop is used
 
         Arguments:
@@ -78,8 +78,8 @@ class KNN:
 
     def compute_distances_no_loops(self, X):
         '''
-        Computes distance from every sample of X to every training sample
-        Fully vectorizes the calculations
+        Computes L1 distance from every sample of X to every training sample
+        Fully vectorizes the calculations using numpy
 
         Arguments:
         X, np array (num_test_samples, num_features) - samples to run
