@@ -13,6 +13,16 @@ def binary_classification_metrics(prediction, ground_truth):
     recall = 0
     accuracy = 0
     f1 = 0
+    accuracy = (prediction == ground_truth).nonzero()[0].shape[0] / prediction.shape[0]
+
+    true_positive = ground_truth[prediction == True].nonzero()[0].shape[0]
+    all_positive = ground_truth[prediction == True].shape[0]
+    false_negative = (ground_truth[prediction == False]).nonzero()[0].shape[0]
+
+    precision = true_positive / all_positive
+    recall = true_positive / (true_positive + false_negative)
+
+    f1 = (2 * precision * recall) / (precision + recall)
 
     # TODO: implement metrics!
     # Some helpful links:
