@@ -92,7 +92,7 @@ class KNN:
         num_test = X.shape[0]
         # Using float32 to to save memory - the default is float64
         dists = np.zeros((num_test, num_train), np.float32)
-        return np.sum(np.abs(X - self.train_X), axis=1)
+        return np.sum(np.abs(X - self.train_X[:, np.newaxis]), axis=2).T
 
     def predict_labels_binary(self, dists):
         '''

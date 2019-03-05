@@ -21,15 +21,14 @@ binary_test_X = binary_test_X.reshape(binary_test_X.shape[0], -1)
 knn_classifier = KNN(k=1)
 knn_classifier.fit(binary_train_X, binary_train_y)
 
-if False:
-    dists = knn_classifier.compute_distances_two_loops(binary_test_X)
-    assert np.isclose(dists[0, 10], np.sum(np.abs(binary_test_X[0] - binary_train_X[10])))
+dists = knn_classifier.compute_distances_two_loops(binary_test_X)
+assert np.isclose(dists[0, 10], np.sum(np.abs(binary_test_X[0] - binary_train_X[10])))
 
-    dists = knn_classifier.compute_distances_one_loop(binary_test_X)
-    assert np.isclose(dists[0, 10], np.sum(np.abs(binary_test_X[0] - binary_train_X[10])))
+dists = knn_classifier.compute_distances_one_loop(binary_test_X)
+assert np.isclose(dists[0, 10], np.sum(np.abs(binary_test_X[0] - binary_train_X[10])))
 
-    dists = knn_classifier.compute_distances_no_loops(binary_test_X)
-    assert np.isclose(dists[0, 10], np.sum(np.abs(binary_test_X[0] - binary_train_X[10])))
+dists = knn_classifier.compute_distances_no_loops(binary_test_X)
+assert np.isclose(dists[0, 10], np.sum(np.abs(binary_test_X[0] - binary_train_X[10])))
 
 
 if False:
