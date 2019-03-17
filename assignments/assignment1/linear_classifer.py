@@ -14,7 +14,11 @@ def softmax(z):
         probability for every class, 0..1
     '''
     z1 = z - np.max(z)
-    sm = (np.exp(z1).T / np.sum(np.exp(z1), axis=0)).T
+    if len(z1.shape) == 2:
+        s1 = np.sum(np.exp(z1), axis=0)[:,None]
+    else:
+        s1 = np.sum(np.exp(z1), axis=0)
+    sm = (np.exp(z1).T / s1).T
     return sm
 
 
@@ -50,7 +54,7 @@ def softmax_with_cross_entropy(predictions, target_index):
       loss, single value - cross-entropy loss
       dprediction, np array same shape as predictions - gradient of predictions by loss value
     '''
-    loss = cross_entropy_loss(predictions, target_index)
+    loss = np.mean(cross_entropy_loss(predictions, target_index))
     dprediction = softmax(predictions)
     dprediction[target_index] -= 1
     return loss, dprediction
