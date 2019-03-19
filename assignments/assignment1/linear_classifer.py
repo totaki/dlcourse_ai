@@ -57,9 +57,6 @@ def softmax_with_cross_entropy(predictions, target_index):
     loss =  torch.nn.CrossEntropyLoss()
     output = loss(g1, t2)
     output.backward()
-#    loss = np.mean(cross_entropy_loss(predictions, target_index))
-#    dprediction = softmax(predictions)
-#    dprediction[target_index.reshape(-1), range(0, target_index.reshape(-1).shape[0])] -= 1
     return np.float(output), t1.grad.numpy().T
 
 
@@ -77,9 +74,12 @@ def l2_regularization(W, reg_strength):
     '''
 
     # TODO: implement l2 regularization and gradient
-    raise Exception("Not implemented!")
-
-    return loss, grad
+    tw = torch.tensor(W, requires_grad=True)
+    t1 = torch.mul(tw, 2)
+    t2 = torch.sum(t1)
+    t3 = t2 * reg_strength
+    t3.backward()
+    return np.float(t3), tw.grad.numpy()
     
 
 def linear_softmax(X, W, target_index):
@@ -96,12 +96,16 @@ def linear_softmax(X, W, target_index):
       gradient, np.array same shape as W - gradient of weight by loss
 
     '''
-    predictions = np.dot(X, W)
-
-    # TODO implement prediction and gradient over W
-    raise Exception("Not implemented!")
-    
-    return loss, dW
+    m = torch.nn.Softmax()
+    tw = torch.tensor(W, requires_grad=True)
+    tx = torch.tensor(X)
+    ti = torch.tensor(target_index)
+    predictions = torch.mm(tx, tw)
+    s = m(predictions)
+    loss =  torch.nn.CrossEntropyLoss()
+    output = loss(s, ti)
+    output.backward()
+    return np.float(output), tw.grad.numpy()
 
 
 class LinearSoftmaxClassifier():
