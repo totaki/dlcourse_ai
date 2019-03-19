@@ -1,5 +1,5 @@
 import numpy as np
-
+import torch
 
 def softmax(z):
     '''
@@ -14,11 +14,7 @@ def softmax(z):
         probability for every class, 0..1
     '''
     z1 = z - np.max(z)
-    if len(z1.shape) == 2:
-        s1 = np.sum(np.exp(z1), axis=0)[:,None]
-    else:
-        s1 = np.sum(np.exp(z1), axis=0)
-    sm = (np.exp(z1).T / s1).T
+    sm = np.exp(z1) / np.sum(np.exp(z1), axis=0)
     return sm
 
 
@@ -35,7 +31,7 @@ def cross_entropy_loss(probs, target_index):
     Returns:
       loss: single value
     '''
-    result = np.log(softmax(probs)[target_index]) * -1
+    result = np.log(softmax(probs)[target_index.reshape(-1)][np.arange(target_index.shape[1])]) * -1
     return result
 
 
@@ -54,10 +50,17 @@ def softmax_with_cross_entropy(predictions, target_index):
       loss, single value - cross-entropy loss
       dprediction, np array same shape as predictions - gradient of predictions by loss value
     '''
-    loss = np.mean(cross_entropy_loss(predictions, target_index))
-    dprediction = softmax(predictions)
-    dprediction[target_index] -= 1
-    return loss, dprediction
+    m = torch.nn.Softmax()
+    t1 = torch.tensor((predictions - np.max(predictions)).T, requires_grad=True)
+    t2 = torch.tensor(target_index.reshape(-1))
+    g1 = m(t1)
+    loss =  torch.nn.CrossEntropyLoss()
+    output = loss(g1, t2)
+    output.backward()
+#    loss = np.mean(cross_entropy_loss(predictions, target_index))
+#    dprediction = softmax(predictions)
+#    dprediction[target_index.reshape(-1), range(0, target_index.reshape(-1).shape[0])] -= 1
+    return np.float(output), t1.grad.numpy().T
 
 
 def l2_regularization(W, reg_strength):
